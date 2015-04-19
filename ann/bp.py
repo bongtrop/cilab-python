@@ -27,6 +27,8 @@ class bp:
 
   def backPropagate(self, input, target):
     if len(target)!=self.layer[-1]:
+      print len(target)
+      print self.layer[-1]
       raise ValueError('Wrong number of target values')
 
     self.net.process(input)

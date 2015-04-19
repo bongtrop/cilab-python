@@ -2,7 +2,7 @@ import net
 import bp
 
 net = net.randNet([2,2,1])
-b = bp.bp(net, 0.5, 0.5)
+b = bp.bp(net, 0.5, 0.1)
 
 dataset = [[[0,0],[0]],[[0,1],[1]],[[1,0],[1]],[[1,1],[0]]]
 

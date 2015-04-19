@@ -1,5 +1,7 @@
 import math
 import random
+import json
+import copy
 
 random.seed(0)
 
@@ -28,8 +30,18 @@ def randNet(layer, type=SIGMOID):
 
   return net(layer, weight, bias, type)
 
+def json2net(filename):
+  fr = open(filename, "r")
+  ann = json.load(fr)
+  layer = ann[0]
+  weight = ann[1]
+  bias = ann[2]
+  type = ann[3]
+
+  return net(layer, weight, bias, type)
+
 class net:
-  def __init__(self, layer, weight, bias, type=SIGMOID):
+  def __init__(self, layer, weight, bias, type=SIGMOID, filename=None):
     self.type = type
     self.layer = layer
     self.weight = weight
@@ -49,9 +61,8 @@ class net:
       raise ValueError('wrong number of inputs')
 
     self.node[0] = input
-
     for l in range(1, len(self.layer)):
-      self.node[l] = self.bias[l]
+      self.node[l] = copy.deepcopy(self.bias[l])
       for i in range(0,self.layer[l]):
         for j in range(0,self.layer[l-1]):
           self.node[l][i] = self.node[l][i] + self.node[l-1][j] * self.weight[l][j][i]
@@ -78,3 +89,19 @@ class net:
 
   def getType(self):
     return self.type
+
+  def getOutput(self):
+    return [x for x in self.node[-1]]
+
+  def save(self, filename):
+    ann = [self.layer, self.weight, self.bias, self.type]
+    fw = open(filename, "w")
+    json.dump(ann, fw)
+
+  def load(self, filename):
+    fr = open(filename, "r")
+    ann = json.load(fr)
+    self.layer = ann[0]
+    self.weight = ann[1]
+    self.bias = ann[2]
+    self.type = ann[3]
